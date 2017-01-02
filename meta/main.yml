@@ -14,8 +14,9 @@ galaxy_info:
       - xenial
 
   galaxy_tags:
-    - proxies
-    - proxy
-    - git
+    - user
+    - groups
+    - ssh
+    - sshd
 
 dependencies: []

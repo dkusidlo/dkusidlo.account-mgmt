@@ -12,30 +12,28 @@ Requirements
 Role Variables
 --------------
 
-user_groups:
-  - name:
-    PasswordAuthentication:
-    AllowTcpForwarding
-    AllowAgentForwarding
-    X11Forwarding
-    ForceCommand
+user_groups:  
+  - name:  
+    PasswordAuthentication:  
+    AllowTcpForwarding:  
+    AllowAgentForwarding:  
+    X11Forwarding:  
+    ForceCommand:  
 
 user:
-  - name:
-    state:
-    groups:
-    shell:
+  - name:  
+    state:  
+    groups:  
+    shell:  
     key:
-
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-  ---
+```
   - hosts: all
     roles:
-      - role: dkusidlo.account_mgmt
+      - role: dkusidlo.account-mgmt
         user_groups:
           - name: testgroup1
             PasswordAuthentication: 'yes'
@@ -45,6 +43,7 @@ Including an example of how to use your role (for instance, with variables passe
             ForceCommand: 'yes'
           - name: testgroup2
             PasswordAuthentication: 'no'
+
         user:
           - name: testuser1
             state: present
@@ -54,6 +53,7 @@ Including an example of how to use your role (for instance, with variables passe
           - name: testuser2
             groups: 'testgroup2'
             shell: /bin/false
+```
 
  Development & Testing
  ---------------------
@@ -87,5 +87,5 @@ BSD
 Author Information
 ------------------
 
-Dennis Kusidlo
+Dennis Kusidlo  
 https://github.com/dkusidlo

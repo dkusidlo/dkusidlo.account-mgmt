@@ -1,5 +1,5 @@
 ---
-# tasks file for dkusidlo.account_mgmt
+# tasks file for dkusidlo.account-mgmt
 
 ### groups
 - name: manage groups linux
@@ -15,6 +15,7 @@
     path: /etc/ssh/sshd_groups/
     state: directory
     mode: '0755'
+  tags: ssh_configuration
 
 - name: manage groups sshd
   template:
@@ -23,7 +24,7 @@
     backup: yes
   with_items:
     '{{ user_groups }}'
-  tags: configuration
+  tags: ssh_configuration
 
 - name: source /etc/ssh/sshd_groups/sshd_groups in /etc/ssh/sshd_config
   lineinfile:
@@ -33,6 +34,7 @@
     create: yes
     backup: yes
     state: present
+  tags: ssh_configuration
 
 ### user
 - name: manage user
@@ -43,7 +45,7 @@
     shell: /bin/false
   with_items:
     '{{ user }}'
-  tags: user
+  tags: user_configuration
 
 - name: manage keys
   lineinfile:
@@ -57,6 +59,3 @@
     '{{ user }}'
   ignore_errors: yes
   tags: keys
-
-# - pause:
-#     minutes: 3

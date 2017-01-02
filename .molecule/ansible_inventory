@@ -1,4 +1,4 @@
-dkusidlo.account_mgmt ansible_connection=docker
+dkusidlo.account-mgmt ansible_connection=docker
 
 [group1]
-dkusidlo.account_mgmt
+dkusidlo.account-mgmt
