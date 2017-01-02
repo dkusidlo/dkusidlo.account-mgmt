@@ -1,0 +1,23 @@
+---
+- hosts: all
+  roles:
+    - role: dkusidlo.account_mgmt
+
+      user_groups:
+        - name: testgroup1
+          PasswordAuthentication: 'yes'
+          AllowTcpForwarding: 'yes'
+          AllowAgentForwarding: 'yes'
+          X11Forwarding: 'yes'
+          ForceCommand: 'yes'
+        - name: testgroup2
+          PasswordAuthentication: 'no'
+      user:
+        - name: testuser1
+          state: present
+          groups: 'testgroup1'
+          shell: /bin/zsh
+          key: 'rsa-ssh ... x@y.z'
+        - name: testuser2
+          groups: 'testgroup2'
+          shell: /bin/false

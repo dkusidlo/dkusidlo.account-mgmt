@@ -1,0 +1,62 @@
+---
+# tasks file for dkusidlo.account_mgmt
+
+### groups
+- name: manage groups linux
+  group:
+    name: '{{ item.name }}'
+    state: present
+  with_items:
+    '{{ user_groups }}'
+  tags: configuration
+
+- name: makedir /etc/ssh/sshd_groups/
+  file:
+    path: /etc/ssh/sshd_groups/
+    state: directory
+    mode: '0755'
+
+- name: manage groups sshd
+  template:
+    src: 'sshd_groups.j2'
+    dest: '/etc/ssh/sshd_groups/sshd_group_{{ item.name }}'
+    backup: yes
+  with_items:
+    '{{ user_groups }}'
+  tags: configuration
+
+- name: source /etc/ssh/sshd_groups/sshd_groups in /etc/ssh/sshd_config
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    line: 'source /etc/ssh/sshd_groups/*'
+    insertafter: EOF
+    create: yes
+    backup: yes
+    state: present
+
+### user
+- name: manage user
+  user:
+    name: '{{ item.name }}'
+    state: present
+    groups: '{{ item.groups }}'
+    shell: /bin/false
+  with_items:
+    '{{ user }}'
+  tags: user
+
+- name: manage keys
+  lineinfile:
+    dest: /var/lib/authorized_keys/{{ item.name }}.keys
+    line: '{{ item.key }}'
+    insertafter: EOF
+    create: yes
+    backup: yes
+    state: present
+  with_items:
+    '{{ user }}'
+  ignore_errors: yes
+  tags: keys
+
+# - pause:
+#     minutes: 3

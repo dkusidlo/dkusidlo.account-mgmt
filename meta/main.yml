@@ -1,0 +1,21 @@
+galaxy_info:
+  author: Dennis Kusidlo
+  description: Role for managing user and groups
+  company: none
+
+  license:
+    - BSD
+
+  min_ansible_version: 2
+
+  platforms:
+  - name: Ubuntu
+    versions:
+      - xenial
+
+  galaxy_tags:
+    - proxies
+    - proxy
+    - git
+
+dependencies: []

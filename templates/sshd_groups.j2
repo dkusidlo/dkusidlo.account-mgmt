@@ -1,0 +1,24 @@
+Match Group {{ item.name }}
+  {% if item.PasswordAuthentication is defined %}
+  PasswordAuthentication {{ item.PasswordAuthentication }}
+  {% else %}
+  PasswordAuthentication no
+  {% endif %}
+  {% if item.AllowTcpForwarding is defined %}
+  AllowTcpForwarding {{ item.AllowTcpForwarding }}
+  {% else %}
+  AllowTcpForwarding no
+  {% endif %}
+  {% if item.AllowAgentForwarding is defined %}
+  AllowAgentForwarding {{ item.AllowAgentForwarding }}
+  {% else %}
+  AllowAgentForwarding no
+  {% endif %}
+  {% if item.X11Forwarding is defined %}
+  X11Forwarding {{ item.X11Forwarding }}
+  {% else %}
+  X11Forwarding no
+  {% endif %}
+  {% if item.ForceCommand is defined %}
+  ForceCommand echo {{ item.name }} jump host
+  {% endif %}
