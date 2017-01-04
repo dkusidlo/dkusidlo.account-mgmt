@@ -1,3 +1,4 @@
+
 Match Group {{ item.name }}
   {% if item.PasswordAuthentication is defined %}
   PasswordAuthentication {{ item.PasswordAuthentication }}
@@ -18,7 +19,4 @@ Match Group {{ item.name }}
   X11Forwarding {{ item.X11Forwarding }}
   {% else %}
   X11Forwarding no
-  {% endif %}
-  {% if item.ForceCommand is defined %}
-  ForceCommand echo {{ item.name }} jump host
   {% endif %}

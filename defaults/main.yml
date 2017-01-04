@@ -1,2 +1,12 @@
 ---
 # defaults file for dkusidlo.account-mgmt
+
+# where to store ssh keys. username gets appended to key_location
+key_location: '/var/lib/authorized_keys/'
+
+ssh_PasswordAuthentication: false
+ssh_PermitRootLogin: false
+ssh_UsePAM: false
+ssh_ClientAliveInterval: 600
+ssh_ClientAliveCountMax: 3
+ssh_MaxAuthTries: 4

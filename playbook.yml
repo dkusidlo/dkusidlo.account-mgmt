@@ -17,6 +17,7 @@
           state: present
           groups: 'testgroup1'
           shell: /bin/zsh
+          password: "$yourhashedpw"
           key: 'rsa-ssh ... x@y.z'
         - name: testuser2
           groups: 'testgroup2'

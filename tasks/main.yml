@@ -2,6 +2,7 @@
 # tasks file for dkusidlo.account-mgmt
 
 ### groups
+
 - name: manage groups linux
   group:
     name: '{{ item.name }}'
@@ -10,46 +11,67 @@
     '{{ user_groups }}'
   tags: configuration
 
-- name: makedir /etc/ssh/sshd_groups/
+- name: makedir /etc/ssh/conf.d/
   file:
-    path: /etc/ssh/sshd_groups/
+    path: /etc/ssh/conf.d/
     state: directory
     mode: '0755'
+  tags: ssh_configuration
+
+- name: copy default sshd_config to /etc/ssh/conf.d/
+  template:
+    src: templates/sshd_config.j2
+    dest: /etc/ssh/conf.d/sshd_config
   tags: ssh_configuration
 
 - name: manage groups sshd
   template:
     src: 'sshd_groups.j2'
-    dest: '/etc/ssh/sshd_groups/sshd_group_{{ item.name }}'
-    backup: yes
+    dest: '/etc/ssh/conf.d/sshd_config_{{ item.name }}'
   with_items:
     '{{ user_groups }}'
   tags: ssh_configuration
 
-- name: source /etc/ssh/sshd_groups/sshd_groups in /etc/ssh/sshd_config
-  lineinfile:
+- name: assemble new sshd_config
+  assemble:
+    src: /etc/ssh/conf.d/
     dest: /etc/ssh/sshd_config
-    line: 'source /etc/ssh/sshd_groups/*'
-    insertafter: EOF
-    create: yes
+    mode: 0600
+    owner: root
+    group: root
     backup: yes
-    state: present
-  tags: ssh_configuration
+    validate: '/usr/sbin/sshd -T -f %s'
 
-### user
-- name: manage user
+### user ###
+- name: manage user with password
   user:
     name: '{{ item.name }}'
-    state: present
+    state: '{{ item.state }}'
     groups: '{{ item.groups }}'
-    shell: /bin/false
+    shell: '{{ item.shell }}'
+    password: '{{ item.password }}'
   with_items:
     '{{ user }}'
+  when:
+    item.state == 'present' and item.password is defined
+  tags: user_configuration
+
+- name: manage user without password
+  user:
+    name: '{{ item.name }}'
+    state: '{{ item.state }}'
+    groups: '{{ item.groups }}'
+    shell: '{{ item.shell }}'
+    password: ''
+  with_items:
+    '{{ user }}'
+  when:
+    item.state == 'present' and item.password is not defined
   tags: user_configuration
 
 - name: manage keys
   lineinfile:
-    dest: /var/lib/authorized_keys/{{ item.name }}.keys
+    dest: '{{ key_location }}{{ item.name }}'
     line: '{{ item.key }}'
     insertafter: EOF
     create: yes
@@ -58,4 +80,5 @@
   with_items:
     '{{ user }}'
   ignore_errors: yes
-  tags: keys
+  notify: restart sshd
+  tags: ssh_keys

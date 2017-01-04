@@ -1,0 +1,90 @@
+# Package generated configuration file
+# See the sshd_config(5) manpage for details
+
+# What ports, IPs and protocols we listen for
+Port 22
+# Use these options to restrict which interfaces/protocols sshd will bind to
+#ListenAddress ::
+#ListenAddress 0.0.0.0
+Protocol 2
+# HostKeys for protocol version 2
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+
+#Privilege Separation is turned on for security
+UsePrivilegeSeparation yes
+UseLogin no
+
+# Lifetime and size of ephemeral version 1 server key
+KeyRegenerationInterval 3600
+ServerKeyBits 1024
+
+# Logging
+SyslogFacility AUTH
+LogLevel INFO
+
+# Authentication:
+LoginGraceTime 120
+PermitRootLogin {{ 'without-password' if ssh_PermitRootLogin else 'no' }}
+StrictModes yes
+
+RSAAuthentication yes
+PubkeyAuthentication yes
+
+AuthorizedKeysFile {{ key_location }}/%u
+
+# Hosts
+IgnoreRhosts yes
+IgnoreUserKnownHosts yes
+HostbasedAuthentication no
+
+# For this to work you will also need host keys in /etc/ssh_known_hosts
+RhostsRSAAuthentication no
+
+# Passwords
+PasswordAuthentication {{ 'yes' if ssh_PasswordAuthentication else 'no' }}
+PermitEmptyPasswords no
+ChallengeResponseAuthentication no
+
+# Kerberos options
+KerberosAuthentication no
+KerberosOrLocalPasswd no
+KerberosTicketCleanup yes
+#KerberosGetAFSToken no
+
+# GSSAPI options
+GSSAPIAuthentication no
+#GSSAPICleanupCredentials yes
+
+X11Forwarding no
+X11DisplayOffset 10
+PrintMotd no
+PrintLastLog yes
+
+TCPKeepAlive no
+PermitTunnel no
+ClientAliveInterval {{ ssh_ClientAliveInterval }}
+ClientAliveCountMax {{ ssh_ClientAliveCountMax }}
+
+MaxAuthTries {{ ssh_MaxAuthTries }}
+MaxSessions 10
+MaxStartups 10:30:100
+
+#Banner /etc/issue.net
+
+# Allow client to pass locale environment variables
+AcceptEnv LANG LC_*
+
+Subsystem sftp /usr/lib/openssh/sftp-server
+
+# Set this to 'yes' to enable PAM authentication, account processing,
+# and session processing. If this is enabled, PAM authentication will
+# be allowed through the ChallengeResponseAuthentication and
+# PasswordAuthentication.  Depending on your PAM configuration,
+# PAM authentication via ChallengeResponseAuthentication may bypass
+# the setting of "PermitRootLogin without-password".
+# If you just want the PAM account and session checks to run without
+# PAM authentication, then enable this but set PasswordAuthentication
+# and ChallengeResponseAuthentication to 'no'.
+UsePAM {{ 'yes' if ssh_UsePAM else 'no' }}

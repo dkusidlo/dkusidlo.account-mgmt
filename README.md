@@ -11,6 +11,16 @@ Requirements
 
 Role Variables
 --------------
+```
+# where to store ssh keys. username gets appended to key_location
+key_location: '/var/lib/authorized_keys/'
+
+ssh_PasswordAuthentication: [false]
+ssh_PermitRootLogin: [false]
+ssh_UsePAM: [false]
+ssh_ClientAliveInterval: [600]
+ssh_ClientAliveCountMax: [3]
+ssh_MaxAuthTries: [4]
 
 user_groups:  
   - name:  
@@ -25,8 +35,9 @@ user:
     state:  
     groups:  
     shell:  
+    password:  # python -c 'import crypt; print crypt.crypt("mypassword","$1$somesalt!")'
     key:
-
+```
 Example Playbook
 ----------------
 
@@ -49,11 +60,13 @@ Example Playbook
             state: present
             groups: 'testgroup1'
             shell: /bin/zsh
+            password: '$yourhashedpw'
             key: 'rsa-ssh ... x@y.z'
           - name: testuser2
             groups: 'testgroup2'
             shell: /bin/false
 ```
+
 
  Development & Testing
  ---------------------
